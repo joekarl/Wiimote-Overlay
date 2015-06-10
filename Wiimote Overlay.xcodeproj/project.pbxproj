@@ -14,6 +14,8 @@
 		CB885BD91B274D0B005A3C25 /* Wiimote_OverlayTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB885BD81B274D0B005A3C25 /* Wiimote_OverlayTests.m */; };
 		CB885BE41B274D41005A3C25 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB885BE31B274D41005A3C25 /* CoreGraphics.framework */; };
 		CB8860181B2770A1005A3C25 /* libwiiuse.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8860171B2770A1005A3C25 /* libwiiuse.dylib */; };
+		CB88601C1B277851005A3C25 /* WMO_WiimoteManager.c in Sources */ = {isa = PBXBuildFile; fileRef = CB88601A1B277851005A3C25 /* WMO_WiimoteManager.c */; };
+		CB88601F1B2785A2005A3C25 /* WMO_DisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB88601E1B2785A2005A3C25 /* WMO_DisplayView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,11 @@
 		CB885BE31B274D41005A3C25 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		CB8860171B2770A1005A3C25 /* libwiiuse.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libwiiuse.dylib; path = "vendor/wiiuse-master/src/libwiiuse.dylib"; sourceTree = "<group>"; };
 		CB8860191B27712F005A3C25 /* wiiuse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wiiuse.h; path = "vendor/wiiuse-master/src/wiiuse.h"; sourceTree = "<group>"; };
+		CB88601A1B277851005A3C25 /* WMO_WiimoteManager.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = WMO_WiimoteManager.c; sourceTree = "<group>"; };
+		CB88601B1B277851005A3C25 /* WMO_WiimoteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMO_WiimoteManager.h; sourceTree = "<group>"; };
+		CB88601D1B2785A2005A3C25 /* WMO_DisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMO_DisplayView.h; sourceTree = "<group>"; };
+		CB88601E1B2785A2005A3C25 /* WMO_DisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMO_DisplayView.m; sourceTree = "<group>"; };
+		CB8860201B279B9E005A3C25 /* WMO_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WMO_types.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +96,11 @@
 				CB885BC91B274D0B005A3C25 /* Images.xcassets */,
 				CB885BCB1B274D0B005A3C25 /* MainMenu.xib */,
 				CB885BC21B274D0B005A3C25 /* Supporting Files */,
+				CB88601A1B277851005A3C25 /* WMO_WiimoteManager.c */,
+				CB88601B1B277851005A3C25 /* WMO_WiimoteManager.h */,
+				CB88601D1B2785A2005A3C25 /* WMO_DisplayView.h */,
+				CB88601E1B2785A2005A3C25 /* WMO_DisplayView.m */,
+				CB8860201B279B9E005A3C25 /* WMO_types.h */,
 			);
 			path = "Wiimote Overlay";
 			sourceTree = "<group>";
@@ -228,8 +240,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB88601C1B277851005A3C25 /* WMO_WiimoteManager.c in Sources */,
 				CB885BC81B274D0B005A3C25 /* main.m in Sources */,
 				CB885BC61B274D0B005A3C25 /* AppDelegate.m in Sources */,
+				CB88601F1B2785A2005A3C25 /* WMO_DisplayView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
