@@ -52,7 +52,6 @@
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     
     // draw presses
-    [[NSColor blueColor] setFill];
     [[NSColor blackColor] setStroke];
     for (int i = 0; i < MAX_NUM_POINTER_PRESS; ++i) {
         WMO_pointer_press pointerPress = _status->pointer_presses[i];
@@ -63,8 +62,11 @@
                 _status->pointer_presses[i].active = false;
                 continue;
             }
-            double radius = MAX_PRESS_RADIUS - MAX_PRESS_RADIUS * ((MAX_POINTER_PRESS_AGE - age) / MAX_POINTER_PRESS_AGE);
+            double ageDt = ((MAX_POINTER_PRESS_AGE - age) / MAX_POINTER_PRESS_AGE);
+            double radius = MAX_PRESS_RADIUS - MAX_PRESS_RADIUS * ageDt;
             double halfRadius = radius / 2;
+            NSColor *fillColor = [NSColor colorWithDeviceRed:48.0 / 255.0 green:213.0 / 255.0 blue:200.0 / 255.0 alpha:0.5];
+            [fillColor setFill];
             NSRect rect = NSMakeRect(pointerPress.press_x - halfRadius, pointerPress.press_y - halfRadius, radius, radius);
             NSBezierPath* circlePath = [NSBezierPath bezierPath];
             [circlePath appendBezierPathWithOvalInRect: rect];

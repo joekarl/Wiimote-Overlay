@@ -47,7 +47,7 @@
     [_window setAcceptsMouseMovedEvents:NO];
     [_window setIgnoresMouseEvents:YES];
     [_window setOpaque:NO];
-    [_window setBackgroundColor:[NSColor colorWithDeviceRed:0.0 green:0.0 blue:1.0 alpha:0.2]];
+    [_window setBackgroundColor: [NSColor clearColor]];
     [_window orderFrontRegardless];
     [_window setStyleMask: NSBorderlessWindowMask];
     [_window setLevel:NSScreenSaverWindowLevel];
