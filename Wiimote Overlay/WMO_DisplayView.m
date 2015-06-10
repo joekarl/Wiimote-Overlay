@@ -8,55 +8,93 @@
 
 #import "WMO_DisplayView.h"
 
+#define CURSOR_WIDTH 10.0
+#define HALF_CURSOR_WIDTH CURSOR_WIDTH / 2.0
+#define MAX_PRESS_RADIUS 60.0
+
 @interface WMO_DisplayView()
 
-- (NSEvent *)handleEvent:(NSEvent *)theEvent;
-
-@property id globalEventMonitor, localEventMonitor;
+@property WMO_status * status;
+@property NSLock * statusLock;
+@property NSImage * cursorHandImage;
 
 @end
 
 @implementation WMO_DisplayView
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (id)initWithFrame:(NSRect)frameRect andStatus:(WMO_status *)status andStatusLock:(NSLock *)statusLock {
     self = [super initWithFrame:frameRect];
     
-    NSEventMask eventMasks = NSLeftMouseDownMask |
-                             NSLeftMouseUpMask |
-                             NSMouseMovedMask |
-                             NSLeftMouseDraggedMask |
-                             NSRightMouseDownMask |
-                             NSRightMouseUpMask;
-    
     if (self) {
-        // Create monitors for both local and global mouse events
-        _globalEventMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:eventMasks handler:^(NSEvent *incomingEvent) {
-            [self handleEvent:incomingEvent];
-        }];
-        _localEventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:eventMasks handler:^(NSEvent *incomingEvent) {
-            return [self handleEvent:incomingEvent];
-        }];
+        _status = status;
+        _statusLock = statusLock;
+        _cursorHandImage = [NSImage imageNamed:@"cursor-hand"];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            while (true) {
+                [self setNeedsDisplay:YES];
+                NSTimeInterval sleep = 0.0167777;
+                [NSThread sleepForTimeInterval: sleep];
+                if ([[self window] isOnActiveSpace]) {
+                    [NSCursor hide];
+                } else {
+                    [NSCursor unhide];
+                }
+            }
+        });
     }
     return self;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
+    [_statusLock lock];
     
-    // Drawing code here.
-}
-
-- (NSEvent *)handleEvent:(NSEvent *)theEvent {
-    NSPoint eventLocation = [theEvent locationInWindow];
-    //NSLog(@"Mouse event x:%f y:%f", eventLocation.x, eventLocation.y);
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     
-    BOOL isMoving = [theEvent type] == NSMouseMoved;
+    // draw presses
+    [[NSColor blueColor] setFill];
+    [[NSColor blackColor] setStroke];
+    for (int i = 0; i < MAX_NUM_POINTER_PRESS; ++i) {
+        WMO_pointer_press pointerPress = _status->pointer_presses[i];
+        if (pointerPress.active) {
+            double age = now - pointerPress.press_time;
+            if (age > MAX_POINTER_PRESS_AGE) {
+                // deactivate press
+                _status->pointer_presses[i].active = false;
+                continue;
+            }
+            double radius = MAX_PRESS_RADIUS - MAX_PRESS_RADIUS * ((MAX_POINTER_PRESS_AGE - age) / MAX_POINTER_PRESS_AGE);
+            double halfRadius = radius / 2;
+            NSRect rect = NSMakeRect(pointerPress.press_x - halfRadius, pointerPress.press_y - halfRadius, radius, radius);
+            NSBezierPath* circlePath = [NSBezierPath bezierPath];
+            [circlePath appendBezierPathWithOvalInRect: rect];
+            [circlePath fill];
+            [circlePath stroke];
+        }
+    }
     
-    return theEvent;
+    // draw pointer
+    NSPoint cursorPoint = NSMakePoint(_status->pointer_x - 50, _status->pointer_y - 150);
+    [_cursorHandImage drawAtPoint:cursorPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
+    
+    // draw debug point
+    if (_status->button_state[WMO_buttons_A] == WMO_button_state_PRESSED) {
+        [[NSColor greenColor] setFill];
+        [[NSColor greenColor] setStroke];
+    } else {
+        [[NSColor redColor] setFill];
+        [[NSColor redColor] setStroke];
+    }
+    NSRect cursorRect = NSMakeRect(_status->pointer_x - HALF_CURSOR_WIDTH,
+                                   _status->pointer_y - HALF_CURSOR_WIDTH,
+                                   CURSOR_WIDTH, CURSOR_WIDTH);
+    NSRectFill(cursorRect);
+    
+    [_statusLock unlock];
 }
 
 - (BOOL)acceptsFirstResponder {
-    return NO;
+    return YES;
 }
 
 @end

@@ -7,7 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "WMO_types.h"
 
 @interface WMO_DisplayView : NSView
+
+- (id)initWithFrame:(NSRect)frameRect andStatus:(WMO_status *)status andStatusLock:(NSLock *)statusLock;
 
 @end
